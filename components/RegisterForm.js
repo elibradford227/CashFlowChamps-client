@@ -2,28 +2,64 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { registerUser } from '../utils/auth'; // Update with path to registerUser
+import { registerUser } from '../utils/auth';
 
 function RegisterForm({ user, updateUser }) {
   const [formData, setFormData] = useState({
-    bio: '',
+    username: '',
+    email: '',
     uid: user.uid,
   });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerUser(formData).then(() => updateUser(user.uid));
+    const updatedFormData = { ...formData, uid: user.uid };
+    registerUser(updatedFormData)
+      .then(() => updateUser(user.uid));
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Gamer Bio</Form.Label>
-        <Form.Control as="textarea" name="bio" required placeholder="Enter your Bio" onChange={({ target }) => setFormData((prev) => ({ ...prev, [target.name]: target.value }))} />
-        <Form.Text className="text-muted">Let other gamers know a little bit about you...</Form.Text>
+    <Form
+      onSubmit={handleSubmit}
+      className="text-center d-flex flex-column justify-content-center align-content-center"
+      style={{
+        height: '90vh',
+        padding: '30px',
+        maxWidth: '500px',
+        margin: '0 auto',
+      }}
+    >
+
+      <Form.Group className="mb-3">
+        <Form.Label>username</Form.Label>
+        <Form.Control
+          name="username"
+          required
+          value={formData.username}
+          onChange={handleInputChange}
+        />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
+
+      <Form.Group className="mb-3">
+        <Form.Label>email</Form.Label>
+        <Form.Control
+          name="email"
+          required
+          value={formData.email}
+          onChange={handleInputChange}
+        />
+      </Form.Group>
+
+      <Button variant="primary" type="submit" style={{ backgroundColor: '#003049', marginTop: '20px' }}>
+        Register
       </Button>
     </Form>
   );
