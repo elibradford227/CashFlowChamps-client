@@ -23,8 +23,17 @@ export default function NavBar() {
             <Link passHref href="/">
               <Nav.Link>Home</Nav.Link>
             </Link>
-            <Link passHref href="/delete-me">
-              <Nav.Link>Delete Me</Nav.Link>
+            <Link passHref href="/Budget">
+              <Nav.Link>Create Budget</Nav.Link>
+            </Link>
+            <Link passHref href="/Add Expense">
+              <Nav.Link>Add Expense</Nav.Link>
+            </Link>
+            <Link passHref href="/Add Income">
+              <Nav.Link>Add Income</Nav.Link>
+            </Link>
+            <Link passHref href="/">
+              <Nav.Link>Random button</Nav.Link>
             </Link>
             <Button variant="danger" onClick={signOut}>
               Sign Out
