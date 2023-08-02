@@ -11,7 +11,7 @@ const BudgetTable = ({
 
   return (
     <div>
-      <h2>{user.fbUser.DisplayName}</h2>
+      <h2>{user.fbUser.displayName}</h2>
       <table>
         <thead>
           <tr>
