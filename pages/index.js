@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { signOut } from '../utils/auth';
 import { useAuth } from '../utils/context/authContext';
 import WelcomeForm from '../components/forms/WelcomeForm';
+// import BudgetTable from '../components/BudgetTable';
+import { getBudgetsByUserID } from '../api/budgetData';
 
 function Home() {
   const { user } = useAuth();
 
-  const [budget] = useState(false);
+  const [budget, setBudget] = useState([]);
+
+  useEffect(() => {
+    getBudgetsByUserID(user.id).then((result) => setBudget(result));
+  }, [user.id]);
 
   return (
     <div
@@ -20,7 +26,7 @@ function Home() {
       }}
     >
       {
-        !budget ? (
+        budget.length === 0 ? (
           <>
             <WelcomeForm />
           </>
