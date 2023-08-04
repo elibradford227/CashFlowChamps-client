@@ -4,13 +4,17 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import { createBudget } from '../../api/budgetData';
+import { useAuth } from '../../utils/context/authContext';
 
 const initialState = {
   income: '',
+  total: 0,
 };
 
 export default function WelcomeForm() {
   const [formInput, setFormInput] = useState(initialState);
+  const { user } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +26,8 @@ export default function WelcomeForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const payload = { ...formInput, userId: user.id };
+    createBudget(payload).then(window.location.reload(true));
   };
 
   return (
