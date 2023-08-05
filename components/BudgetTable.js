@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
-import { getBudgetExpenses, getBudgets } from '../api/budgetData'; // Replace with the correct path
+import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData'; // Replace with the correct path
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
@@ -16,10 +16,10 @@ const BudgetTable = ({
   const remainingBudget = initialIncome - totalExpenseAmount;
   const displayBudgetExpenses = async () => {
     try {
-      const userBudgets = await getBudgets(user.uid);
+      const userBudgets = await getBudgetsByUserID(user.id);
 
       if (userBudgets.length > 0) {
-        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id);
+        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id).then((result) => console.warn(result));
         setExpenses(budgetExpenses);
       }
     } catch (error) {
@@ -30,7 +30,9 @@ const BudgetTable = ({
   useEffect(() => {
     displayBudgetExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, user.uid]);
+  }, [user, user.id]);
+
+  // console.warn(expenses);
 
   return (
     <div>

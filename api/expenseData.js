@@ -74,7 +74,6 @@ const updateExpense = (id, payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-
 export {
   getExpenses,
   createExpense,
