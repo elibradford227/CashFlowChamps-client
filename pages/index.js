@@ -26,26 +26,27 @@ function Home() {
         margin: '0 auto',
       }}
     >
-      {budget.length === 0 ? (
-        <>
-          <WelcomeForm />
-        </>
-      ) : (
-        <div>
-          <h1>Hello {user.fbUser.displayName}! </h1>
-          <p>Your Bio: {user.bio}</p>
-          <BudgetTable
-            initialIncome={budget[0].income}
-            expenses={budget} // Pass the budget data as expenses
-            editExpense={updateExpense}
-            deleteExpense={deleteExpense}
-          />
-          <p>Click the button below to logout!</p>
-          <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
-            Sign Out
-          </Button>
-        </div>
-      )}
+      {
+        budget.length === 0 ? (
+          <>
+            <WelcomeForm />
+          </>
+        ) : (
+          <div>
+            <h1>Hello {user.fbUser.displayName} </h1>
+            <BudgetTable
+              initialIncome={budget[0].income}
+              expenses={budget} // Pass the budget data as expenses
+              editExpense={updateExpense}
+              deleteExpense={deleteExpense}
+            />
+            <p>Click the button below to logout</p>
+            <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
+              Sign Out
+            </Button>
+          </div>
+        )
+    }
     </div>
   );
 }
