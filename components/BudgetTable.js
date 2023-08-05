@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
-import { getBudgetExpenses, getBudgets } from '../api/budgetData'; // Replace with the correct path
+import { getBudgetExpenses } from '../api/budgetData';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
@@ -14,23 +14,20 @@ const BudgetTable = ({
     ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0)
     : 0;
   const remainingBudget = initialIncome - totalExpenseAmount;
-  const displayBudgetExpenses = async () => {
-    try {
-      const userBudgets = await getBudgets(user.uid);
 
-      if (userBudgets.length > 0) {
-        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id);
-        setExpenses(budgetExpenses);
-      }
+  const displayUserExpenses = async () => {
+    try {
+      const userExpenses = await getBudgetExpenses(user.uid);
+      setExpenses(userExpenses);
     } catch (error) {
-      console.error('Error fetching budget expenses:', error);
+      console.error('Error fetching user expenses:', error);
     }
   };
 
   useEffect(() => {
-    displayBudgetExpenses();
+    displayUserExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, user.uid]);
+  }, [user.uid]);
 
   return (
     <div>
