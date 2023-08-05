@@ -74,7 +74,7 @@ const getBudgetsByUserID = (id) => new Promise((resolve, reject) => {
 });
 
 const getBudgetExpenses = (budgetId) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/expenses`, {
+  fetch(`${clientCredentials.databaseURL}/budget_expenses`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const getBudgetExpenses = (budgetId) => new Promise((resolve, reject) => {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
-        const budgetExpenses = Object.values(data).filter((expense) => expense.budget_id === budgetId);
+        const budgetExpenses = Object.values(data).filter((expense) => expense.budget_id.id === budgetId);
         resolve(budgetExpenses);
       } else {
         resolve([]);
