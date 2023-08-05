@@ -11,8 +11,9 @@ const BudgetTable = ({
   const [expenses, setExpenses] = useState([]);
 
   const totalExpenseAmount = expenses
-    ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0)
+    ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
     : 0;
+
   const remainingBudget = initialIncome - totalExpenseAmount;
 
   const displayUserExpenses = async () => {
@@ -62,12 +63,14 @@ const BudgetTable = ({
         </tbody>
       </table>
       <p>
-        Total Expenses: $
-        {expenses
-          ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0).toFixed(2)
-          : '0.00'}
+        <p>
+          Total Expenses: $
+          {expenses && Array.isArray(expenses) && expenses.length > 0
+            ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
+            : '0.00'}
+        </p>
+        <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
       </p>
-      <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
     </div>
   );
 };
