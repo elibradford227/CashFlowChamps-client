@@ -32,8 +32,8 @@ export default function WelcomeForm() {
 
   return (
     // eslint-disable-next-line no-undef
-    <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">Welcome, lets create your budget</h2>
+    <Form className="welcomeForm" onSubmit={handleSubmit}>
+      <h2 id="welcomeFormh2" className="text-white mt-5">Welcome, let&apos;s create your budget.</h2>
       {/* INCOME INPUT  */}
       <FloatingLabel controlId="floatingInput1" label="Income" className="mb-3">
         <Form.Control
@@ -46,6 +46,7 @@ export default function WelcomeForm() {
         />
       </FloatingLabel>
       <Button type="submit">Create Your Budget</Button>
+      <hr />
     </Form>
   );
 }
