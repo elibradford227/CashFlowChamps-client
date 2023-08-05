@@ -7,21 +7,22 @@ import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData'; // Re
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
 }) => {
-  const user = useAuth();
+  const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
 
   const totalExpenseAmount = expenses
-    ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0)
+    ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
     : 0;
   const remainingBudget = initialIncome - totalExpenseAmount;
 
   const displayUserExpenses = async () => {
     try {
-      const userBudgets = await getBudgetsByUserID();
+      const userBudgets = await getBudgetsByUserID(user.id);
 
       if (userBudgets.length > 0) {
-        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id).then((result) => console.warn(result));
-        setExpenses(budgetExpenses);
+        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id);
+        const returnedExpenses = budgetExpenses.map((expense) => expense.expense_id);
+        setExpenses(returnedExpenses);
       }
     } catch (error) {
       console.error('Error fetching user expenses:', error);
@@ -29,11 +30,9 @@ const BudgetTable = ({
   };
 
   useEffect(() => {
-    displayUserExpenses(user.id);
+    displayUserExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, user.id]);
-
-  // console.warn(expenses);
+  }, [user.id]);
 
   return (
     <div>
@@ -51,8 +50,8 @@ const BudgetTable = ({
           {expenses && Array.isArray(expenses) && expenses.length > 0 ? (
             expenses.map((expense) => (
               <tr key={expense.id}>
-                <td>{expense.category}</td>
-                <td>{expense.date}</td>
+                <td>{expense.title}</td>
+                <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
                   <Button onClick={() => updateExpense(expense.id)}>Edit</Button>
@@ -70,7 +69,7 @@ const BudgetTable = ({
       <p>
         Total Expenses: $
         {expenses
-          ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0).toFixed(2)
+          ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
           : '0.00'}
       </p>
       <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>

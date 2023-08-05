@@ -74,9 +74,28 @@ const updateExpense = (id, payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getExpensesByUserID = (id) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/expenses/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        resolve(data);
+      } else {
+        resolve([]);
+      }
+    })
+    .catch(reject);
+});
+
 export {
   getExpenses,
   createExpense,
   deleteExpense,
   updateExpense,
+  getExpensesByUserID,
 };
