@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import {
+  Button, Modal, ModalHeader, ModalBody, ModalFooter,
+} from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses } from '../api/budgetData';
+import { createExpense } from '../api/expenseData';
+import ExpenseForm from './forms/expenseForm';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
 }) => {
   const user = useAuth();
   const [expenses, setExpenses] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const totalExpenseAmount = expenses
     ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
@@ -18,7 +23,7 @@ const BudgetTable = ({
 
   const displayUserExpenses = async () => {
     try {
-      const userExpenses = await getBudgetExpenses(user.uid);
+      const userExpenses = await getBudgetExpenses(user.id);
       setExpenses(userExpenses);
     } catch (error) {
       console.error('Error fetching user expenses:', error);
@@ -28,7 +33,15 @@ const BudgetTable = ({
   useEffect(() => {
     displayUserExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.uid]);
+  }, [user.id]);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   return (
     <div>
@@ -46,8 +59,8 @@ const BudgetTable = ({
           {expenses && Array.isArray(expenses) && expenses.length > 0 ? (
             expenses.map((expense) => (
               <tr key={expense.id}>
-                <td>{expense.category}</td>
-                <td>{expense.date}</td>
+                <td>{expense.title}</td>
+                <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
                   <Button onClick={() => updateExpense(expense.id)}>Edit</Button>
@@ -62,21 +75,29 @@ const BudgetTable = ({
           )}
         </tbody>
       </table>
+      <Button onClick={openModal}>Add Expense</Button>
+      <Modal isOpen={modalIsOpen} toggle={closeModal}>
+        <ModalHeader toggle={closeModal}>Add Expense</ModalHeader>
+        <ModalBody>
+          <ExpenseForm addExpense={createExpense} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={closeModal}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
       <p>
-        <p>
-          Total Expenses: $
-          {expenses && Array.isArray(expenses) && expenses.length > 0
-            ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
-            : '0.00'}
-        </p>
-        <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
+        Total Expenses: $
+        {expenses && Array.isArray(expenses) && expenses.length > 0
+          ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
+          : '0.00'}
       </p>
+      <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
     </div>
   );
 };
 
 BudgetTable.propTypes = {
-  initialIncome: PropTypes.number.isRequired,
+  initialIncome: PropTypes.string.isRequired,
   updateExpense: PropTypes.func.isRequired,
   deleteExpense: PropTypes.func.isRequired,
 };
