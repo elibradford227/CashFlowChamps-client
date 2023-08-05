@@ -73,7 +73,26 @@ const getBudgetsByUserID = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getBudgetExpenses = (id) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/expenses`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        resolve(Object.values(data).filter((item) => item.budget_id.id === id));
+      } else {
+        resolve([]);
+      }
+    })
+    .catch(reject);
+});
+
 export {
+  getBudgetExpenses,
   getBudgets,
   createBudget,
   getUsers,

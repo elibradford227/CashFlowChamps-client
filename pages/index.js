@@ -3,8 +3,9 @@ import { Button } from 'react-bootstrap';
 import { signOut } from '../utils/auth';
 import { useAuth } from '../utils/context/authContext';
 import WelcomeForm from '../components/forms/WelcomeForm';
-// import BudgetTable from '../components/BudgetTable';
 import { getBudgetsByUserID } from '../api/budgetData';
+import BudgetTable from '../components/BudgetTable';
+import { deleteExpense, updateExpense } from '../api/expenseData';
 
 function Home() {
   const { user } = useAuth();
