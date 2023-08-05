@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
-import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData'; // Replace with the correct path
+import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
@@ -72,9 +72,8 @@ const BudgetTable = ({
         {expenses
           ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
           : '0.00'}
-        </p>
-        <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
       </p>
+      <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
     </div>
   );
 };
