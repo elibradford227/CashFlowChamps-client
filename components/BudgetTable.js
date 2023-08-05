@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
+import ExpenseForm from './forms/expenseForm';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
 }) => {
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
+  const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
 
   const totalExpenseAmount = expenses
     ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
@@ -34,6 +36,14 @@ const BudgetTable = ({
     displayUserExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
+
+  const openExpenseForm = () => {
+    setIsExpenseFormOpen(true);
+  };
+
+  const closeExpenseForm = () => {
+    setIsExpenseFormOpen(false);
+  };
 
   return (
     <div>
@@ -67,6 +77,8 @@ const BudgetTable = ({
           )}
         </tbody>
       </table>
+      <Button onClick={openExpenseForm}>Add Expense</Button>
+      <ExpenseForm isOpen={isExpenseFormOpen} closeModal={closeExpenseForm} />
       <p>
         Total Expenses: $
         {expenses
