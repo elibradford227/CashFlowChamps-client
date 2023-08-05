@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
-import { getBudgetExpenses, getBudgets } from '../api/budgetData'; // Replace with the correct path
+import { getBudgetExpenses, getBudgets } from '../api/budgetData';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
