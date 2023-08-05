@@ -14,21 +14,22 @@ const BudgetTable = ({
     ? expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0)
     : 0;
   const remainingBudget = initialIncome - totalExpenseAmount;
-  const displayBudgetExpenses = async () => {
+
+  const displayUserExpenses = async () => {
     try {
-      const userBudgets = await getBudgetsByUserID(user.id);
+      const userBudgets = await getBudgetsByUserID();
 
       if (userBudgets.length > 0) {
         const budgetExpenses = await getBudgetExpenses(userBudgets[0].id).then((result) => console.warn(result));
         setExpenses(budgetExpenses);
       }
     } catch (error) {
-      console.error('Error fetching budget expenses:', error);
+      console.error('Error fetching user expenses:', error);
     }
   };
 
   useEffect(() => {
-    displayBudgetExpenses();
+    displayUserExpenses(user.id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, user.id]);
 
