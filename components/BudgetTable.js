@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
-} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
-import { getBudgetExpenses } from '../api/budgetData';
-import { createExpense } from '../api/expenseData';
-import ExpenseForm from './forms/expenseForm';
+import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
 
 const BudgetTable = ({
   initialIncome, updateExpense, deleteExpense,
 }) => {
-  const user = useAuth();
+  const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const totalExpenseAmount = expenses
     ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
@@ -23,8 +18,13 @@ const BudgetTable = ({
 
   const displayUserExpenses = async () => {
     try {
-      const userExpenses = await getBudgetExpenses(user.id);
-      setExpenses(userExpenses);
+      const userBudgets = await getBudgetsByUserID(user.id);
+
+      if (userBudgets.length > 0) {
+        const budgetExpenses = await getBudgetExpenses(userBudgets[0].id);
+        const returnedExpenses = budgetExpenses.map((expense) => expense.expense_id);
+        setExpenses(returnedExpenses);
+      }
     } catch (error) {
       console.error('Error fetching user expenses:', error);
     }
@@ -34,14 +34,6 @@ const BudgetTable = ({
     displayUserExpenses();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
 
   return (
     <div>
@@ -75,19 +67,9 @@ const BudgetTable = ({
           )}
         </tbody>
       </table>
-      <Button onClick={openModal}>Add Expense</Button>
-      <Modal isOpen={modalIsOpen} toggle={closeModal}>
-        <ModalHeader toggle={closeModal}>Add Expense</ModalHeader>
-        <ModalBody>
-          <ExpenseForm addExpense={createExpense} />
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={closeModal}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
       <p>
         Total Expenses: $
-        {expenses && Array.isArray(expenses) && expenses.length > 0
+        {expenses
           ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
           : '0.00'}
       </p>
@@ -97,7 +79,7 @@ const BudgetTable = ({
 };
 
 BudgetTable.propTypes = {
-  initialIncome: PropTypes.string.isRequired,
+  initialIncome: PropTypes.number.isRequired,
   updateExpense: PropTypes.func.isRequired,
   deleteExpense: PropTypes.func.isRequired,
 };
