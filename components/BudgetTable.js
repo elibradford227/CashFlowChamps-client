@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
-import { deleteExpensePromise } from '../api/expenseData';
 import ExpenseForm from './forms/expenseForm';
+import { deleteExpense } from '../api/expenseData';
 
 const BudgetTable = ({
   initialIncome, updateExpense,
@@ -48,7 +48,7 @@ const BudgetTable = ({
 
   const deleteExpenseFunc = (id) => {
     if (window.confirm('Delete this expense?')) {
-      deleteExpensePromise(id).then(() => displayUserExpenses());
+      deleteExpense(id).then(() => displayUserExpenses());
       console.warn(id);
     }
   };
