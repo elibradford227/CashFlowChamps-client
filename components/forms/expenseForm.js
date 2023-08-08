@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Modal, ModalBody, ModalFooter, ModalHeader,
-} from 'reactstrap';
+} from 'react-bootstrap';
 
 const ExpenseForm = ({ isOpen, closeModal }) => {
   const [title, setTitle] = useState('');
