@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
 import ExpenseForm from './forms/expenseForm';
-import { deleteExpense } from '../api/expenseData';
+import { deleteExpensePromise } from '../api/expenseData';
 
 const BudgetTable = ({
   initialIncome, updateExpense,
@@ -48,8 +48,7 @@ const BudgetTable = ({
 
   const deleteExpenseFunc = (id) => {
     if (window.confirm('Delete this expense?')) {
-      deleteExpense(id).then(() => displayUserExpenses());
-      console.warn(id);
+      deleteExpensePromise(id).then(() => displayUserExpenses());
     }
   };
 
