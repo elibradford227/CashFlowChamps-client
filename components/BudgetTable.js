@@ -7,11 +7,12 @@ import ExpenseForm from './forms/expenseForm';
 import { deleteExpensePromise } from '../api/expenseData';
 
 const BudgetTable = ({
-  initialIncome, updateExpense,
+  initialIncome,
 }) => {
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
   const totalExpenseAmount = expenses
     ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
@@ -72,7 +73,13 @@ const BudgetTable = ({
                 <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
-                  <Button onClick={() => updateExpense(expense.id)}>Edit</Button>
+                  <Button onClick={() => {
+                    setSelectedExpense(expense); // Set the selected expense before opening the modal
+                    openExpenseForm();
+                  }}
+                  >
+                    Edit
+                  </Button>
                   <Button variant="danger" onClick={() => deleteExpenseFunc(expense.id)}>Delete</Button>
                 </td>
               </tr>
@@ -84,8 +91,13 @@ const BudgetTable = ({
           )}
         </tbody>
       </table>
-      <Button onClick={openExpenseForm}>Add Expense</Button>
-      <ExpenseForm isOpen={isExpenseFormOpen} closeModal={closeExpenseForm} />
+      <Button onClick={() => {
+        setSelectedExpense(null);
+        openExpenseForm();
+      }}
+      >Add Expense
+      </Button>
+      <ExpenseForm isOpen={isExpenseFormOpen} closeModal={closeExpenseForm} obj={selectedExpense} />
       <p>
         Total Expenses: $
         {expenses
@@ -99,7 +111,6 @@ const BudgetTable = ({
 
 BudgetTable.propTypes = {
   initialIncome: PropTypes.number.isRequired,
-  updateExpense: PropTypes.func.isRequired,
 };
 
 export default BudgetTable;

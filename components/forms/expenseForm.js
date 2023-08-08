@@ -21,7 +21,11 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
   const [userBudget, setUserBudget] = useState([]);
 
   useEffect(() => {
-    if (obj) setFormInputs(obj);
+    if (obj) {
+      setFormInputs(obj);
+    } else {
+      setFormInputs(initialState);
+    }
   }, [obj]);
 
   const handleChange = (e) => {
@@ -52,18 +56,41 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
   const HandleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formInput,
-      userId: user.id,
-    };
-    await createExpense(payload).then((item) => {
-      if (userBudget.length > 0) {
-        const userBudgetId = userBudget[0].id;
-        createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
-        // await displayUserExpenses();
-        window.location.reload();
-      }
-    });
+    if (obj) {
+      const payload = { userId: obj.user_id, ...formInput };
+      const keys = Object.keys(payload);
+      delete payload[keys[keys.length - 1]];
+      updateExpense(obj.id, payload);
+      window.location.reload();
+    } else {
+      const payload = {
+        ...formInput,
+        userId: user.id,
+      };
+      await createExpense(payload).then((item) => {
+        if (userBudget.length > 0) {
+          const userBudgetId = userBudget[0].id;
+          createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
+          // await displayUserExpenses();
+          setFormInputs(initialState);
+          window.location.reload();
+        }
+      });
+    }
+
+    // const payload = {
+    //   ...formInput,
+    //   userId: user.id,
+    // };
+    // await createExpense(payload).then((item) => {
+    //   if (userBudget.length > 0) {
+    //     const userBudgetId = userBudget[0].id;
+    //     createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
+    //     // await displayUserExpenses();
+    //     setFormInputs(initialState);
+    //     window.location.reload();
+    //   }
+    // });
     closeModal();
   };
 
