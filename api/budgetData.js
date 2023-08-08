@@ -92,7 +92,27 @@ const getBudgetExpenses = (budgetId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const createBudgetExpense = (payload) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/budget_expenses`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        resolve(data);
+      } else {
+        resolve([]);
+      }
+    })
+    .catch(reject);
+});
+
 export {
+  createBudgetExpense,
   getBudgetExpenses,
   getBudgets,
   createBudget,
