@@ -25,7 +25,13 @@ const deleteExpensePromise = (id) => new Promise((resolve, reject) => {
       'Content-Type': 'application/json',
     },
   })
-    .then((data) => resolve((data)))
+    .then((data) => {
+      if (data) {
+        resolve(data);
+      } else {
+        resolve([]);
+      }
+    })
     .catch(reject);
 });
 
@@ -40,6 +46,7 @@ const createExpense = (payload) => new Promise((resolve, reject) => {
     .then((response) => response.json())
     .then((data) => {
       if (data) {
+        console.warn(data);
         resolve(data);
       } else {
         resolve([]);

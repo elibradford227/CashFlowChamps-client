@@ -5,7 +5,9 @@ import {
   Button, Form, Modal, ModalBody, ModalFooter, ModalHeader,
 } from 'reactstrap';
 import { useAuth } from '../../utils/context/authContext';
+// eslint-disable-next-line no-unused-vars
 import { createExpense, updateExpense } from '../../api/expenseData';
+import { getBudgetsByUserID, createBudgetExpense } from '../../api/budgetData';
 
 const initialState = {
   title: '',
@@ -16,6 +18,7 @@ const initialState = {
 const ExpenseForm = ({ isOpen, closeModal, obj }) => {
   const [formInput, setFormInputs] = useState(initialState);
   const { user } = useAuth();
+  const [userBudget, setUserBudget] = useState([]);
 
   useEffect(() => {
     if (obj) setFormInputs(obj);
@@ -29,26 +32,46 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // const displayUserExpenses = async () => {
+  //   try {
+  //     const userExpenses = await getBudgetsByUserID(user.id);
+
+  //     if (userExpenses.length > 0) {
+  //       const budgetExpenses = await getBudgetExpenses(userExpenses[0].id);
+  //       const returnedExpenses = budgetExpenses.map((expense) => expense.expense_id);
+  //       setExpenses(returnedExpenses);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user expenses:', error);
+  //   }
+  // };
+  useEffect(() => {
+    getBudgetsByUserID(user.id).then(setUserBudget);
+  }, [user.id]);
+
+  const HandleSubmit = async (e) => {
     e.preventDefault();
-    if (obj) {
-      updateExpense(obj, formInput)
-        .then(() => closeModal())
-        .catch((err) => console.error(err));
-    } else {
-      const payload = { ...formInput, budgetId: user.id };
-      createExpense(payload)
-        .then(({ id }) => updateExpense(id, payload))
-        .then(() => closeModal())
-        .catch((err) => console.error(err));
-    }
+
+    const payload = {
+      ...formInput,
+      userId: user.id,
+    };
+    await createExpense(payload).then((item) => {
+      if (userBudget.length > 0) {
+        const userBudgetId = userBudget[0].id;
+        createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
+        // await displayUserExpenses();
+        window.location.reload();
+      }
+    });
+    closeModal();
   };
 
   return (
     <Modal isOpen={isOpen} toggle={closeModal}>
       <ModalHeader toggle={closeModal}>Add Expense</ModalHeader>
       <ModalBody>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={HandleSubmit}>
           <div className="form-group">
             <label htmlFor="title">Title</label>
             <input
@@ -81,7 +104,7 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
               onChange={handleChange}
             />
           </div>
-          <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+          <Button type="submit" className="btn btn-primary">
             Add Expense
           </Button>
         </Form>
@@ -96,12 +119,13 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
 };
 
 ExpenseForm.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
   obj: PropTypes.shape({
+    id: PropTypes.number,
     title: PropTypes.string,
-    price: PropTypes.number,
+    price: PropTypes.string,
     description: PropTypes.string,
-    isOpen: PropTypes.bool.isRequired,
-    closeModal: PropTypes.func.isRequired,
   }),
 };
 
