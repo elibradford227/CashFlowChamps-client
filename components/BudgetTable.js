@@ -49,7 +49,6 @@ const BudgetTable = ({
   const deleteExpenseFunc = (id) => {
     if (window.confirm('Delete this expense?')) {
       deleteExpensePromise(id).then(() => displayUserExpenses());
-      console.warn(id);
     }
   };
 
