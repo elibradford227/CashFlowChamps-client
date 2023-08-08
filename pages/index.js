@@ -5,7 +5,7 @@ import { useAuth } from '../utils/context/authContext';
 import WelcomeForm from '../components/forms/WelcomeForm';
 import { getBudgetsByUserID } from '../api/budgetData';
 import BudgetTable from '../components/BudgetTable';
-import { deleteExpense, updateExpense } from '../api/expenseData';
+import { updateExpense } from '../api/expenseData';
 
 function Home() {
   const { user } = useAuth();
@@ -38,7 +38,6 @@ function Home() {
               initialIncome={budget[0].income}
               expenses={budget} // Pass the budget data as expenses
               editExpense={updateExpense}
-              deleteExpense={deleteExpense}
             />
             <p>Click the button below to logout</p>
             <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>

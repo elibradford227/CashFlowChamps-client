@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
+import { deleteExpensePromise } from '../api/expenseData';
 import ExpenseForm from './forms/expenseForm';
 
 const BudgetTable = ({
-  initialIncome, updateExpense, deleteExpense,
+  initialIncome, updateExpense,
 }) => {
   const { user } = useAuth();
   const [expenses, setExpenses] = useState([]);
@@ -45,6 +46,13 @@ const BudgetTable = ({
     setIsExpenseFormOpen(false);
   };
 
+  const deleteExpenseFunc = (id) => {
+    if (window.confirm('Delete this expense?')) {
+      deleteExpensePromise(id).then(() => displayUserExpenses());
+      console.warn(id);
+    }
+  };
+
   return (
     <div>
       <h2>{user && user.displayName}</h2>
@@ -66,7 +74,7 @@ const BudgetTable = ({
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
                   <Button onClick={() => updateExpense(expense.id)}>Edit</Button>
-                  <Button variant="danger" onClick={() => deleteExpense(expense.id)}>Delete</Button>
+                  <Button variant="danger" onClick={() => deleteExpenseFunc(expense.id)}>Delete</Button>
                 </td>
               </tr>
             ))
@@ -93,7 +101,6 @@ const BudgetTable = ({
 BudgetTable.propTypes = {
   initialIncome: PropTypes.number.isRequired,
   updateExpense: PropTypes.func.isRequired,
-  deleteExpense: PropTypes.func.isRequired,
 };
 
 export default BudgetTable;

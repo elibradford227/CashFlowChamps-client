@@ -18,21 +18,14 @@ const getExpenses = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const deleteExpense = (id) => new Promise((resolve, reject) => {
+const deleteExpensePromise = (id) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/expenses/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data) {
-        resolve(data);
-      } else {
-        resolve([]);
-      }
-    })
+    .then((data) => resolve((data)))
     .catch(reject);
 });
 
@@ -95,7 +88,7 @@ const getExpensesByUserID = (id) => new Promise((resolve, reject) => {
 export {
   getExpenses,
   createExpense,
-  deleteExpense,
+  deleteExpensePromise,
   updateExpense,
   getExpensesByUserID,
 };
