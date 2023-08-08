@@ -6,6 +6,8 @@ import {
 } from 'reactstrap';
 import { useAuth } from '../../utils/context/authContext';
 import { createExpense, updateExpense } from '../../api/expenseData';
+  Button, Modal, ModalBody, ModalFooter, ModalHeader,
+} from 'react-bootstrap';
 
 const initialState = {
   title: '',
