@@ -21,6 +21,10 @@ body {
   background-color: f1faee
 }
 
+p {
+  font-size: larger;
+}
+
 .welcomeForm {
   color: #3a86ff;
   animation: fadeInAnimation ease 3s;
@@ -34,6 +38,41 @@ body {
 
 #floatingInput1 {
   margin-top: 25px;
+}
+
+table {
+  margin: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+td {
+  border-right: 1px solid lightgrey;
+  margin: 10px;
+}
+
+th {
+  border-right: 1px solid lightgrey;
+  padding: 10px;
+}
+
+button {
+  margin: 10px;
+}
+
+.tablebutton{
+  background-color:grey;
+  border: rgb(230, 230, 230) solid 2px;
+  border-radius:15px;
+  color:white;
+  padding:5px;
+  width: 70px;
+}
+.tablebutton:hover{
+  background-color:rgb(230, 230, 230);
+  border: rgb(230, 230, 230) solid 2px;
+  color:black;
+  border-radius:15px;
+  transition-duration: 500ms;
 }
 
 @keyframes fadeInAnimation {

@@ -61,6 +61,7 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
       const keys = Object.keys(payload);
       delete payload[keys[keys.length - 1]];
       updateExpense(obj.id, payload);
+      setFormInputs(initialState);
       window.location.reload();
     } else {
       const payload = {
@@ -77,20 +78,6 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
         }
       });
     }
-
-    // const payload = {
-    //   ...formInput,
-    //   userId: user.id,
-    // };
-    // await createExpense(payload).then((item) => {
-    //   if (userBudget.length > 0) {
-    //     const userBudgetId = userBudget[0].id;
-    //     createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
-    //     // await displayUserExpenses();
-    //     setFormInputs(initialState);
-    //     window.location.reload();
-    //   }
-    // });
     closeModal();
   };
 
