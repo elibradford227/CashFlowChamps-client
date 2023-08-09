@@ -96,7 +96,7 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={closeModal}>
-      <ModalHeader toggle={closeModal}>Add Expense</ModalHeader>
+      <ModalHeader toggle={closeModal}>{obj ? 'Edit' : 'Add'} Expense</ModalHeader>
       <ModalBody>
         <Form onSubmit={HandleSubmit}>
           <div className="form-group">
@@ -131,8 +131,8 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
               onChange={handleChange}
             />
           </div>
-          <Button type="submit" className="btn btn-primary">
-            Add Expense
+          <Button color="primary" type="submit" className="btn btn-primary">
+            {obj ? 'Update' : 'Submit'} Expense
           </Button>
         </Form>
       </ModalBody>
