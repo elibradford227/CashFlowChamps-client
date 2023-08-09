@@ -56,7 +56,11 @@ const BudgetTable = ({
   return (
     <div>
       <h2>{user && user.displayName}</h2>
-      <table>
+      <table
+        style={{
+          border: '1px solid lightgrey',
+        }}
+      >
         <thead>
           <tr>
             <th>Title</th>
@@ -68,19 +72,26 @@ const BudgetTable = ({
         <tbody>
           {expenses && Array.isArray(expenses) && expenses.length > 0 ? (
             expenses.map((expense) => (
-              <tr key={expense.id}>
+              <tr
+                key={expense.id}
+                style={{
+                  border: '1px solid lightgrey',
+                }}
+              >
                 <td>{expense.title}</td>
                 <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
-                  <Button onClick={() => {
-                    setSelectedExpense(expense); // Set the selected expense before opening the modal
-                    openExpenseForm();
-                  }}
+                  <Button
+                    className="tablebutton"
+                    onClick={() => {
+                      setSelectedExpense(expense); // Set the selected expense before opening the modal
+                      openExpenseForm();
+                    }}
                   >
                     Edit
                   </Button>
-                  <Button variant="danger" onClick={() => deleteExpenseFunc(expense.id)}>Delete</Button>
+                  <Button className="tablebutton" variant="danger" onClick={() => deleteExpenseFunc(expense.id)}>Delete</Button>
                 </td>
               </tr>
             ))
@@ -98,13 +109,16 @@ const BudgetTable = ({
       >Add Expense
       </Button>
       <ExpenseForm isOpen={isExpenseFormOpen} closeModal={closeExpenseForm} obj={selectedExpense} />
+      <hr />
       <p>
         Total Expenses: $
         {expenses
           ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0).toFixed(2)
           : '0.00'}
       </p>
+      <hr />
       <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
+      <hr />
     </div>
   );
 };
