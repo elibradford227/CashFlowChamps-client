@@ -5,6 +5,7 @@ import { useAuth } from '../utils/context/authContext';
 import { getBudgetExpenses, getBudgetsByUserID } from '../api/budgetData';
 import ExpenseForm from './forms/expenseForm';
 import { deleteExpensePromise } from '../api/expenseData';
+import WelcomeForm from './forms/WelcomeForm';
 
 const BudgetTable = ({
   initialIncome,
@@ -13,6 +14,13 @@ const BudgetTable = ({
   const [expenses, setExpenses] = useState([]);
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+  const [editingIncome, setEditingIncome] = useState(false);
+
+  const handleEditIncomeClick = () => {
+    setEditingIncome(true);
+  };
+
+  const currentIncome = initialIncome;
 
   const totalExpenseAmount = expenses
     ? expenses.reduce((total, expense) => total + parseFloat(expense.price), 0)
@@ -55,6 +63,14 @@ const BudgetTable = ({
 
   return (
     <div>
+      <h1>Income: ${initialIncome}</h1>
+      <div>
+        {editingIncome ? (
+          <WelcomeForm initialIncome={currentIncome} />
+        ) : (
+          <Button onClick={handleEditIncomeClick}>Edit Income</Button>
+        )}
+      </div>
       <h2>{user && user.displayName}</h2>
       <table>
         <thead>
@@ -74,7 +90,7 @@ const BudgetTable = ({
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
                   <Button onClick={() => {
-                    setSelectedExpense(expense); // Set the selected expense before opening the modal
+                    setSelectedExpense(expense);
                     openExpenseForm();
                   }}
                   >

@@ -1,20 +1,33 @@
-import { React, useState } from 'react';
-// eslint-disable-next-line no-unused-vars
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
-import { createBudget } from '../../api/budgetData';
+import { createBudget, getBudgetsByUserID, updateBudget } from '../../api/budgetData';
 import { useAuth } from '../../utils/context/authContext';
 
 const initialState = {
   income: '',
-  total: 0,
 };
 
-export default function WelcomeForm() {
-  const [formInput, setFormInput] = useState(initialState);
+export default function WelcomeForm({ initialIncome }) {
+  const [formInput, setFormInput] = useState({ income: initialIncome || initialState.income });
   const { user } = useAuth();
+  const [userBudget, setUserBudget] = useState(null);
+
+  useEffect(() => {
+    getBudgetsByUserID(user.id)
+      .then((budget) => {
+        if (budget) {
+          setUserBudget(budget);
+          console.warn(budget, 'budget');
+          setFormInput({ income: budget.income });
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching user budget:', error);
+      });
+  }, [user.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,21 +37,34 @@ export default function WelcomeForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...formInput, userId: user.id };
-    createBudget(payload).then(window.location.reload(true));
+    try {
+      console.warn(userBudget, 'userBudget.id');
+      const payload = {
+        id: userBudget[0].id, income: formInput.income, userId: user.id, total: 0,
+      };
+      if (userBudget) {
+        await updateBudget(payload);
+      } else {
+        await createBudget(payload);
+      }
+
+      window.location.reload(true);
+    } catch (error) {
+      console.error('Error creating/updating budget:', error);
+    }
   };
 
   return (
-    // eslint-disable-next-line no-undef
     <Form className="welcomeForm" onSubmit={handleSubmit}>
-      <h2 id="welcomeFormh2" className="text-white mt-5">Welcome, let&apos;s create your budget.</h2>
-      {/* INCOME INPUT  */}
+      <h2 id="welcomeFormh2" className="text-white mt-5">
+        Welcome, let&apos;s create your budget.
+      </h2>
       <FloatingLabel controlId="floatingInput1" label="Income" className="mb-3">
         <Form.Control
-          type="text"
-          placeholder="Enter a title"
+          type="number"
+          placeholder="Enter your income"
           name="income"
           value={formInput.income}
           onChange={handleChange}
@@ -50,3 +76,11 @@ export default function WelcomeForm() {
     </Form>
   );
 }
+
+WelcomeForm.propTypes = {
+  initialIncome: PropTypes.number,
+};
+
+WelcomeForm.defaultProps = {
+  initialIncome: initialState.income,
+};
