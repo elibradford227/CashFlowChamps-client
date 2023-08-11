@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
@@ -103,9 +104,9 @@ const BudgetTable = ({
                     openExpenseForm();
                   }}
                   >
-                    Edit
+                    <img src="edit.png" className="icon" alt="editbutton" />
                   </Button>
-                  <Button className="tablebutton" variant="danger" onClick={() => deleteExpenseFunc(expense.id)}>Delete</Button>
+                  <Button className="tablebutton" variant="danger" onClick={() => deleteExpenseFunc(expense.id)}><img src="bin.png" className="icon" alt="trash" /></Button>
                 </td>
               </tr>
             ))
