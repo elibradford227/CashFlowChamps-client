@@ -99,10 +99,12 @@ const BudgetTable = ({
                 <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
-                  <Button onClick={() => {
-                    setSelectedExpense(expense);
-                    openExpenseForm();
-                  }}
+                  <Button
+                    className="tablebutton"
+                    onClick={() => {
+                      setSelectedExpense(expense);
+                      openExpenseForm();
+                    }}
                   >
                     <img src="edit.png" className="icon" alt="editbutton" />
                   </Button>
