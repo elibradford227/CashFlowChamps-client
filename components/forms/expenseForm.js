@@ -36,33 +36,17 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
     }));
   };
 
-  // const displayUserExpenses = async () => {
-  //   try {
-  //     const userExpenses = await getBudgetsByUserID(user.id);
-
-  //     if (userExpenses.length > 0) {
-  //       const budgetExpenses = await getBudgetExpenses(userExpenses[0].id);
-  //       const returnedExpenses = budgetExpenses.map((expense) => expense.expense_id);
-  //       setExpenses(returnedExpenses);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching user expenses:', error);
-  //   }
-  // };
   useEffect(() => {
     getBudgetsByUserID(user.id).then(setUserBudget);
   }, [user.id]);
 
-  const HandleSubmit = async (e) => {
-    e.preventDefault();
-
+  const HandleSubmit = async () => {
     if (obj) {
       const payload = { userId: obj.user_id, ...formInput };
       const keys = Object.keys(payload);
       delete payload[keys[keys.length - 1]];
       updateExpense(obj.id, payload);
       setFormInputs(initialState);
-      window.location.reload();
     } else {
       const payload = {
         ...formInput,
@@ -72,9 +56,7 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
         if (userBudget.length > 0) {
           const userBudgetId = userBudget[0].id;
           createBudgetExpense({ budgetId: userBudgetId, expenseId: item.id });
-          // await displayUserExpenses();
           setFormInputs(initialState);
-          window.location.reload();
         }
       });
     }
