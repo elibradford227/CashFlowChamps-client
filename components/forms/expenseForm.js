@@ -101,7 +101,7 @@ const ExpenseForm = ({ isOpen, closeModal, obj }) => {
             />
           </div>
           <Button color="primary" type="submit" className="btn btn-primary">
-            {obj ? 'Update' : 'Submit'} Expense
+            {obj ? 'Edit' : 'Submit'} Expense
           </Button>
         </Form>
       </ModalBody>

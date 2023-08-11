@@ -111,6 +111,18 @@ const createBudgetExpense = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const updateBudget = (payload) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/budgets/${payload.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(resolve)
+    .catch(reject);
+});
+
 export {
   createBudgetExpense,
   getBudgetExpenses,
@@ -118,4 +130,5 @@ export {
   createBudget,
   getUsers,
   getBudgetsByUserID,
+  updateBudget,
 };
