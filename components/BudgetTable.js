@@ -99,12 +99,10 @@ const BudgetTable = ({
                 <td>{expense.description}</td>
                 <td>${parseFloat(expense.price).toFixed(2)}</td>
                 <td>
-                  <Button
-                    className="tablebutton"
-                    onClick={() => {
-                      setSelectedExpense(expense); // Set the selected expense before opening the modal
-                      openExpenseForm();
-                    }}
+                  <Button onClick={() => {
+                    setSelectedExpense(expense);
+                    openExpenseForm();
+                  }}
                   >
                     <img src="edit.png" className="icon" alt="editbutton" />
                   </Button>

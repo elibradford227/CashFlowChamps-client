@@ -19,6 +19,7 @@ function Home() {
   return (
     <div
       className="text-center d-flex flex-column justify-content-center align-content-center"
+      id="home"
       style={{
         maxWidth: '400px',
         margin: '0 auto',

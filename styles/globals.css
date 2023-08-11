@@ -93,3 +93,9 @@ button {
       opacity: 1;
    }
 }
+
+.container {
+  width: 90%;
+  height: auto;
+  margin-top: 15%;
+}

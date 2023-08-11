@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
@@ -10,7 +11,7 @@ const initialState = {
   income: '',
 };
 
-export default function WelcomeForm({ initialIncome }) {
+export default function WelcomeForm({ initialIncome, obj }) {
   const [formInput, setFormInput] = useState({ income: initialIncome || initialState.income });
   const { user } = useAuth();
   const [userBudget, setUserBudget] = useState(null);
@@ -59,7 +60,7 @@ export default function WelcomeForm({ initialIncome }) {
   return (
     <Form className="welcomeForm" onSubmit={handleSubmit}>
       <h2 id="welcomeFormh2" className="text-white mt-5">
-        Welcome, let&apos;s create your budget.
+        {obj ? 'Welcome, let&apos;s create your' : 'Edit your'} budget.
       </h2>
       <FloatingLabel controlId="floatingInput1" label="Income" className="mb-3">
         <Form.Control
@@ -71,7 +72,7 @@ export default function WelcomeForm({ initialIncome }) {
           required
         />
       </FloatingLabel>
-      <Button type="submit">Create Your Budget</Button>
+      <Button type="submit">{!obj ? 'Edit' : 'Create Your'} Budget</Button>
       <hr />
     </Form>
   );
@@ -79,6 +80,11 @@ export default function WelcomeForm({ initialIncome }) {
 
 WelcomeForm.propTypes = {
   initialIncome: PropTypes.number,
+  obj: PropTypes.shape({
+    id: PropTypes.number,
+    income: PropTypes.number,
+    user_id: PropTypes.number,
+  }),
 };
 
 WelcomeForm.defaultProps = {
