@@ -20,12 +20,13 @@ function Home() {
     <div
       className="text-center d-flex flex-column justify-content-center align-content-center"
       style={{
-        height: '90vh',
-        padding: '30px',
         maxWidth: '400px',
         margin: '0 auto',
       }}
     >
+      <head>
+        <title>Budgeting App</title>
+      </head>
       {
         budget.length === 0 ? (
           <>
@@ -33,7 +34,7 @@ function Home() {
           </>
         ) : (
           <div>
-            <h1>Hello {user.fbUser.displayName} </h1>
+            <h1>Hello {user.username} </h1>
             <BudgetTable
               initialIncome={budget[0].income}
               expenses={budget} // Pass the budget data as expenses
