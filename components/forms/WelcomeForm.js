@@ -11,10 +11,10 @@ const initialState = {
   income: '',
 };
 
-export default function WelcomeForm({ initialIncome, obj }) {
+export default function WelcomeForm({ initialIncome }) {
   const [formInput, setFormInput] = useState({ income: initialIncome || initialState.income });
   const { user } = useAuth();
-  const [userBudget, setUserBudget] = useState(null);
+  const [userBudget, setUserBudget] = useState([]);
 
   useEffect(() => {
     getBudgetsByUserID(user.id)
@@ -42,12 +42,13 @@ export default function WelcomeForm({ initialIncome, obj }) {
     e.preventDefault();
     try {
       console.warn(userBudget, 'userBudget.id');
-      const payload = {
-        id: userBudget[0].id, income: formInput.income, userId: user.id, total: 0,
-      };
-      if (userBudget) {
+      if (userBudget.length !== 0) {
+        const payload = {
+          id: userBudget[0].id, income: formInput.income, userId: user.id, total: 0,
+        };
         await updateBudget(payload);
       } else {
+        const payload = { ...formInput, userId: user.id, total: 0 };
         await createBudget(payload);
       }
 
@@ -60,7 +61,7 @@ export default function WelcomeForm({ initialIncome, obj }) {
   return (
     <Form className="welcomeForm" onSubmit={handleSubmit}>
       <h2 id="welcomeFormh2" className="text-white mt-5">
-        {obj ? 'Welcome, let&apos;s create your' : 'Edit your'} budget.
+        {userBudget.length === 0 ? 'Welcome, lets create your' : 'Edit your'} budget.
       </h2>
       <FloatingLabel controlId="floatingInput1" label="Income" className="mb-3">
         <Form.Control
@@ -72,7 +73,7 @@ export default function WelcomeForm({ initialIncome, obj }) {
           required
         />
       </FloatingLabel>
-      <Button type="submit">{!obj ? 'Edit' : 'Create Your'} Budget</Button>
+      <Button type="submit">{userBudget.length !== 0 ? 'Edit' : 'Create Your'} Budget</Button>
       <hr />
     </Form>
   );
